@@ -1,5 +1,5 @@
 export default {
-  async fetch(request, env) { // env berisi semua binding kita
+  async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -27,7 +27,6 @@ export default {
     // GET /api/users - Ambil semua user dari database
     if (path === "/api/users") {
       try {
-        // env.DB adalah binding yang sudah kita buat
         const { results } = await env.DB.prepare(
           "SELECT * FROM users ORDER BY id"
         ).all();
