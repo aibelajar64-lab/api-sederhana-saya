@@ -8,6 +8,3 @@ compatibility_date = "2024-12-18"
 binding = "DB"
 database_name = "user-db-newai"
 database_id = "isi-dengan-database-id-mu"
-
-[assets]
-directory = "./public"  # <- folder aset kamu. Buat folder public dulu di repo.
