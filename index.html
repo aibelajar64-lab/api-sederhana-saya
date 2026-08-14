@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Komentar Pelanggan</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+        input, textarea, button { width: 100%; padding: 10px; margin: 10px 0; }
+        .comment { border-bottom: 1px solid #ddd; padding: 10px 0; }
+        .sentimen { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; }
+        .positif { background: #d4edda; color: #155724; }
+        .negatif { background: #f8d7da; color: #721c24; }
+        .netral { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+
+    <h1>💬 Komentar Pelanggan</h1>
+
+    <!-- Form input komentar -->
+    <div>
+        <input type="text" id="nameInput" placeholder="Nama" />
+        <textarea id="commentInput" placeholder="Tulis komentar..."></textarea>
+        <button onclick="kirimKomentar()">Kirim Komentar</button>
+    </div>
+
+    <!-- Daftar komentar -->
+    <div id="commentsContainer"></div>
+
+    <script>
+        // Ambil semua komentar dari backend
+        async function loadComments() {
+            const res = await fetch('/api/comments');
+            const data = await res.json();
+            const container = document.getElementById('commentsContainer');
+            container.innerHTML = data.map(c => `
+                <div class="comment">
+                    <strong>${c.name}</strong>
+                    <p>${c.comment}</p>
+                    <span class="sentimen ${c.sentimen?.toLowerCase() || 'netral'}">${c.sentimen || 'Netral'}</span>
+                </div>
+            `).join('');
+        }
+
+        // Kirim komentar baru
+        async function kirimKomentar() {
+            const name = document.getElementById('nameInput').value;
+            const comment = document.getElementById('commentInput').value;
+
+            if (!name || !comment) {
+                alert('Nama dan komentar wajib diisi');
+                return;
+            }
+
+            await fetch('/api/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, comment })
+            });
+
+            document.getElementById('nameInput').value = '';
+            document.getElementById('commentInput').value = '';
+            loadComments();
+        }
+
+        // Muat saat pertama kali
+        loadComments();
+    </script>
+</body>
+</html>
